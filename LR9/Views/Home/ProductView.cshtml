@@ -1,0 +1,59 @@
+﻿@page
+@model ProductViewModel
+@{
+    List<Product>? products = TempData["Products"] as List<Product>;
+    if (products is null || TempData["mode"] is null)
+    {
+        throw new Exception();
+    }
+
+    string mode = TempData["mode"].ToString();
+}
+
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    lable {
+        text-align: center;
+        font-weight: bolder;
+    }
+
+    table, th, td {
+        border: 3px solid black;
+        padding: 10px;
+    }
+
+    form {
+        text-align: center;
+    }
+
+    a {
+        display: block;
+        text-align: center;
+    }
+</style>
+<body>
+    <form action="ProductView" method="post">
+        <label for="mode">Оберіть режим:</label>
+        <select id="mode" name="mode">
+            <option value="list">Список</option>
+            <option value="grid">Таблиця</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Confirm">
+    </form>
+    @if (mode == "list")
+    {
+        foreach (Product product in products)
+        {
+            <p>@product.Id.@product.Name - @product.Price$ (@product.CreatedDateTime)</p>
+        }
+    }
+    @if (mode == "grid")
+    {
+        @await Component.InvokeAsync("Table", products)
+    }
+    <a href="/AddProduct">Додати продукт</a>
+</body>
